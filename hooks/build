@@ -3,6 +3,8 @@
 echo "------ HOOK START - BUILD -------"
 printenv
 
-docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` --build-arg VCS_REF=$SOURCE_COMMIT -t $IMAGE_NAME .
+VCS_REF=$(git rev-parse --short HEAD)
+
+docker build --build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` --build-arg VCS_REF="$VCS_REF" -t $IMAGE_NAME .
 
 echo "------ HOOK END - BUILD -------"

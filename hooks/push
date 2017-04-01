@@ -1,0 +1,5 @@
+#!/usr/bin/env sh
+
+echo "------ HOOK START - PUSH -------"
+printenv
+echo "------ HOOK END - PUSH -------"

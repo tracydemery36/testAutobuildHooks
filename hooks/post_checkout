@@ -2,5 +2,4 @@
 
 echo "------ HOOK START - POST_CHECKOUT -------"
 printenv
-
 echo "------ HOOK END - POST_CHECKOUT -------"

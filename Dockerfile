@@ -1,5 +1,5 @@
-FROM debian:jessie
-MAINTAINER Tibo Delor "delor.thibault@gmail.com"
+FROM alpine
+MAINTAINER Vlad Ghinea "vlad@ghn.me"
 
 # Metadata params
 ARG VERSION

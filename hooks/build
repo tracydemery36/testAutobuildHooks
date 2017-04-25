@@ -1,5 +1,12 @@
 #!/usr/bin/env sh
 
 echo "------ HOOK START - BUILD -------"
+
+rvm info || true
+ruby --version || true
+gem --version || true
+gem list || true
+bundle --version || true
+
 printenv
 echo "------ HOOK END - BUILD -------"

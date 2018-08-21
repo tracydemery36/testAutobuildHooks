@@ -2,4 +2,8 @@
 
 echo "------ HOOK START - PUSH -------"
 printenv
+
+ls -lah
+ls -lah ~/.docker
+cat ~/.docker/config.json
 echo "------ HOOK END - PUSH -------"

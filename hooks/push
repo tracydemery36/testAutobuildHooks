@@ -3,7 +3,5 @@
 echo "------ HOOK START - PUSH -------"
 printenv
 
-ls -lah
-ls -lah ~/.docker
-cat ~/.docker/config.json
+docker push vladgh/testautobuildhooks
 echo "------ HOOK END - PUSH -------"

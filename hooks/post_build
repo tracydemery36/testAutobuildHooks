@@ -2,4 +2,6 @@
 
 echo "------ HOOK START - POST_BUILD -------"
 printenv
+
+docker push "${DOCKER_REPO}:latest"
 echo "------ HOOK END - POST_BUILD -------"

@@ -3,6 +3,5 @@
 echo "------ HOOK START - POST_BUILD -------"
 printenv
 
-docker login
-docker push "${DOCKER_REPO}:latest"
+# docker push "${DOCKER_REPO}:latest"
 echo "------ HOOK END - POST_BUILD -------"

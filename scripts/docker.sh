@@ -8,7 +8,13 @@ IFS=$'\n\t'
 
 # DEBUG
 [ -z "${DEBUG:-}" ] || set -x
+
 ls -lah
+git rev-parse --is-shallow-repository
+pwd
+
+
+
 # VARs
 GIT_TAG="$(git describe --always --tags)"
 BUILD_PATH="${BUILD_PATH:-.}"
@@ -44,7 +50,7 @@ generate_semantic_version(){
 #    $ git pull --depth=50
 #    $ git fetch --unshallow origin
 deepen_git_repo(){
-  if [[ "$(git rev-parse --is-shallow-repository)" == 'true' ]]; then
+  if [[ $(git rev-parse --is-shallow-repository) == 'true' ]]; then
     echo 'Deepen repository history'
     git fetch --unshallow origin
   fi

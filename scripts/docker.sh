@@ -9,11 +9,6 @@ IFS=$'\n\t'
 # DEBUG
 [ -z "${DEBUG:-}" ] || set -x
 
-ls -lah
-git rev-parse --is-shallow-repository
-echo 'Deepen repository history'
-git fetch --unshallow origin
-
 # VARs
 GIT_TAG="$(git describe --always --tags)"
 BUILD_PATH="${BUILD_PATH:-.}"
@@ -49,7 +44,7 @@ generate_semantic_version(){
 #    $ git pull --depth=50
 #    $ git fetch --unshallow origin
 deepen_git_repo(){
-  if [[ $(git rev-parse --is-shallow-repository) == 'true' ]]; then
+  if [[ -f $(git rev-parse --git-dir)/shallow ]]; then
     echo 'Deepen repository history'
     git fetch --unshallow origin
   fi
@@ -57,8 +52,9 @@ deepen_git_repo(){
 
 # Build the image with the specified arguments
 build_image(){
-  echo 'Build the image with the specified arguments'
   deepen_git_repo
+
+  echo 'Build the image with the specified arguments'
   (
   cd "$BUILD_PATH"
   docker build \

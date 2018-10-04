@@ -8,7 +8,7 @@ IFS=$'\n\t'
 
 # DEBUG
 [ -z "${DEBUG:-}" ] || set -x
-
+ls -lah
 # VARs
 GIT_TAG="$(git describe --always --tags)"
 BUILD_PATH="${BUILD_PATH:-.}"

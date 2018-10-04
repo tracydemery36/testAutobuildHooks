@@ -2,5 +2,5 @@
 
 echo "------ HOOK START - PUSH -------"
 printenv
-../scripts/docker.sh push
+./scripts/docker.sh push
 echo "------ HOOK END - PUSH -------"

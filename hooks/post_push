@@ -2,6 +2,6 @@
 
 echo "------ HOOK START - POST_PUSH -------"
 printenv
-../scripts/docker.sh tag
-../scripts/docker.sh notify || true
+./scripts/docker.sh tag
+./scripts/docker.sh notify || true
 echo "------ HOOK END - POST_PUSH -------"

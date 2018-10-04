@@ -11,9 +11,8 @@ IFS=$'\n\t'
 
 ls -lah
 git rev-parse --is-shallow-repository
-pwd
-
-
+echo 'Deepen repository history'
+git fetch --unshallow origin
 
 # VARs
 GIT_TAG="$(git describe --always --tags)"

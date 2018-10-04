@@ -2,6 +2,5 @@
 
 echo "------ HOOK START - PUSH -------"
 printenv
-
-docker push vladgh/testautobuildhooks
+../scripts/docker.sh push
 echo "------ HOOK END - PUSH -------"

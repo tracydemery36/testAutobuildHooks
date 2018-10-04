@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+# MicroBadger tokens
+declare -A MICROBADGER_TOKENS=(
+  ['vladgh/testAutobuildHooks']='1LIUNGTtioEcpHJoQZzwK3qQPhE='
+)
+export MICROBADGER_TOKENS

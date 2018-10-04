@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Docker script
+# Docker scripts
 # https://docs.docker.com/docker-cloud/builds/advanced/
 
 # Bash strict mode

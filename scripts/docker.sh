@@ -56,7 +56,7 @@ build_image(){
 
   echo 'Build the image with the specified arguments'
   (
-  cd ".${BUILD_PATH}"
+  cd ".${BUILD_PATH}" # In Docker Hub this is `/` or `/dir`
   docker build \
     --build-arg VERSION="$GIT_TAG" \
     --build-arg VCS_URL="$(git config --get remote.origin.url)" \
@@ -70,10 +70,11 @@ build_image(){
 
 # Push
 push_image(){
-  cat ~/.docker/config.json
-  echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
   echo "Pushing ${IMAGE_NAME}"
-  docker push "${IMAGE_NAME}"
+  docker push "${IMAGE_NAME}" || ( \
+    echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin && \
+    docker push "${IMAGE_NAME}" \
+  )
 }
 
 # Tag image

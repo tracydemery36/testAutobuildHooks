@@ -2,6 +2,9 @@
 
 echo "------ HOOK START - POST_PUSH -------"
 printenv
-./scripts/docker.sh tag
-./scripts/docker.sh notify || true
+
+if [ "$SOURCE_BRANCH" = 'master' ]; then
+  ./scripts/docker.sh tag
+fi
+./scripts/docker.sh notify
 echo "------ HOOK END - POST_PUSH -------"

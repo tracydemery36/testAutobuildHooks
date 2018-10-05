@@ -71,10 +71,7 @@ build_image(){
 # Push
 push_image(){
   echo "Pushing ${IMAGE_NAME}"
-  docker push "${IMAGE_NAME}" || ( \
-    echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin && \
-    docker push "${IMAGE_NAME}" \
-  )
+  docker push "${IMAGE_NAME}"
 }
 
 # Tag image
@@ -98,14 +95,19 @@ tag_image(){
 
 # Notify
 notify_microbadger(){
-  # shellcheck disable=1090
-  . "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
+  local tokens
+  tokens="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
 
-  local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
-  local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
+  if [[ -s "$tokens" ]]; then
+    # shellcheck disable=1090
+    . "$tokens"
 
-  if [[ -n "$token" ]]; then
-    echo "Notify MicroBadger: $(curl -sX POST "$url")"
+    local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
+    local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
+
+    if [[ -n "$token" ]]; then
+      echo "Notify MicroBadger: $(curl -sX POST "$url")"
+    fi
   fi
 }
 

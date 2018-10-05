@@ -70,6 +70,7 @@ build_image(){
 
 # Push
 push_image(){
+  cat ~/.docker/config.json
   echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
   echo "Pushing ${IMAGE_NAME}"
   docker push "${IMAGE_NAME}"

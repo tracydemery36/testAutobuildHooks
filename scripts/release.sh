@@ -105,17 +105,15 @@ main(){
   if [[ "$WRITE_CHANGELOG" == 'true' ]]; then
     generate_log
 
-    if git diff --quiet HEAD; then
-      echo 'CHANGELOG has not changed. Skipping...'
-    else
+    git diff --quiet HEAD || (
       echo 'Commit CHANGELOG'
       git commit --gpg-sign --message "Update change log for ${RELEASE}" CHANGELOG.md
-    fi
-
-    echo "Tag  ${RELEASE}"
-    git tag --sign "${RELEASE}" --message "Release ${RELEASE}"
-    git push --follow-tags
+    )
   fi
+
+  echo "Tag  ${RELEASE}"
+  git tag --sign "${RELEASE}" --message "Release ${RELEASE}"
+  git push --follow-tags
 }
 
 # Run

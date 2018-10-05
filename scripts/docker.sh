@@ -11,7 +11,7 @@ IFS=$'\n\t'
 
 # VARs
 GIT_TAG="$(git describe --always --tags)"
-BUILD_PATH="${BUILD_PATH:-.}"
+BUILD_PATH="${BUILD_PATH:-/}"
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
@@ -56,7 +56,7 @@ build_image(){
 
   echo 'Build the image with the specified arguments'
   (
-  cd "$BUILD_PATH"
+  cd ".${BUILD_PATH}"
   docker build \
     --build-arg VERSION="$GIT_TAG" \
     --build-arg VCS_URL="$(git config --get remote.origin.url)" \

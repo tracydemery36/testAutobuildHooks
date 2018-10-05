@@ -2,5 +2,5 @@
 
 echo "------ HOOK START - BUILD -------"
 printenv
-BUILD_PATH=./ ./scripts/docker.sh build
+./scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

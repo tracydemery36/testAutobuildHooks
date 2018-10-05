@@ -19,17 +19,10 @@ is_cmd() { command -v "$@" >/dev/null 2>&1 ;}
 
 # Check if the repository is clean
 git_clean_repo(){
-  # Check if there are untracked files
-  if [[ ! -z $(git ls-files --others --exclude-standard) ]]; then
-    echo 'ERROR: There are untracked files.'
-    return 1
-  fi
-
-  # Check if there are uncommitted changes
-  if ! git diff --quiet HEAD; then
+  git diff --quiet HEAD || (
     echo 'ERROR: Commit your changes first'
     return 1
-  fi
+  )
 }
 
 # Generate semantic version style tags

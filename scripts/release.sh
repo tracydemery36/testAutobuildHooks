@@ -107,6 +107,7 @@ main(){
 
     git diff --quiet HEAD || (
       echo 'Commit CHANGELOG'
+      git add CHANGELOG.md
       git commit --gpg-sign --message "Update change log for ${RELEASE}" CHANGELOG.md
     )
   fi

@@ -1,6 +1,11 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 echo "------ HOOK START - PUSH -------"
 printenv
+
 ./scripts/docker.sh push
+
+if [[ "$SOURCE_BRANCH" =~ ^v[0-9]+ ]]; then
+  ./scripts/docker.sh tag
+fi
 echo "------ HOOK END - PUSH -------"

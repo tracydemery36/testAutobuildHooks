@@ -18,7 +18,6 @@ DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 DOCKER_REPO="${DOCKER_REPO:-}"
 DOCKER_TAG="${DOCKER_TAG:-latest}"
 IMAGE_NAME="${IMAGE_NAME:-${DOCKER_REPO}:${DOCKER_TAG}}"
-MICROBADGER_WEBHOOK="${MICROBADGER_WEBHOOK:-}"
 
 # Generate semantic version style tags
 generate_semantic_version(){
@@ -93,14 +92,22 @@ tag_image(){
   done
 }
 
-# Notify
-notify_microbadger(){
-  local tokens
-  tokens="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
+# Notify Microbadger
+# Sample `.microbadger` tokens file:
+#     #!/usr/bin/env bash
+#     # MicroBadger tokens
+#     declare -A MICROBADGER_TOKENS=(
+#       ['vladgh/testAutobuildHooks']='ABCDEF='
+#     )
+#     export MICROBADGER_TOKENS
 
-  if [[ -s "$tokens" ]]; then
+notify_microbadger(){
+  local tokens_file
+  tokens_file="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
+
+  if [[ -s "$tokens_file" ]]; then
     # shellcheck disable=1090
-    . "$tokens"
+    . "$tokens_file"
 
     local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
     local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"

@@ -106,6 +106,7 @@ main(){
     generate_log
 
     git diff --quiet HEAD && (
+      ll
       echo 'Commit CHANGELOG'
       git commit --gpg-sign --message "Update change log for ${RELEASE}" CHANGELOG.md
     )

@@ -105,7 +105,7 @@ main(){
   if [[ "$WRITE_CHANGELOG" == 'true' ]]; then
     generate_log
 
-    git diff --quiet HEAD || (
+    git diff --quiet HEAD && (
       echo 'Commit CHANGELOG'
       git commit --gpg-sign --message "Update change log for ${RELEASE}" CHANGELOG.md
     )

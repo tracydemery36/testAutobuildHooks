@@ -54,8 +54,6 @@ build_image(){
   deepen_git_repo
 
   echo 'Build the image with the specified arguments'
-  (
-  cd ".${BUILD_PATH}" # In Docker Hub this is `/` or `/dir`
   docker build \
     --build-arg VERSION="$GIT_TAG" \
     --build-arg VCS_URL="$(git config --get remote.origin.url)" \
@@ -64,7 +62,6 @@ build_image(){
     --file "$DOCKERFILE_PATH" \
     --tag "$IMAGE_NAME" \
     .
-  )
 }
 
 # Push

@@ -11,12 +11,13 @@ IFS=$'\n\t'
 
 # VARs
 GIT_TAG="$(git describe --always --tags)"
+GIT_BRANCH="$(git symbolic-ref --short HEAD)"
 BUILD_PATH="${BUILD_PATH:-/}"
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"
 DOCKER_PASSWORD="${DOCKER_PASSWORD:-}"
 DOCKER_REPO="${DOCKER_REPO:-}"
-DOCKER_TAG="${DOCKER_TAG:-latest}"
+DOCKER_TAG="${DOCKER_TAG:-$(if [[ "$GIT_BRANCH" == 'master' ]]; then echo latest; else echo "$GIT_BRANCH"; fi)}"
 IMAGE_NAME="${IMAGE_NAME:-${DOCKER_REPO}:${DOCKER_TAG}}"
 
 # Generate semantic version style tags
@@ -80,7 +81,6 @@ push_image(){
 #     Tag     /^v([0-9]+)\.([0-9]+)\.([0-9]+)$/     /           {\1}
 tag_image(){
   generate_semantic_version
-  push_image
 
   for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
     echo "Pushing version (${DOCKER_REPO}:${version})"

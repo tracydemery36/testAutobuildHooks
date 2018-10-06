@@ -96,11 +96,11 @@ main(){
       ;;
   esac
 
-  RELEASE="v${MAJOR}.${MINOR}.${PATCH}"
-
   if ! is_cmd git; then echo 'ERROR: Git is not installed!'; exit 1; fi
 
   git_clean_repo
+
+  RELEASE="v${MAJOR}.${MINOR}.${PATCH}"
 
   if [[ "$WRITE_CHANGELOG" == 'true' ]]; then
     generate_log

@@ -104,7 +104,7 @@ main(){
 
   if [[ "$WRITE_CHANGELOG" == 'true' ]]; then
     generate_log
-#
+
     git diff --quiet HEAD || (
       echo 'Commit CHANGELOG'
       git add CHANGELOG.md

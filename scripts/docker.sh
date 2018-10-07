@@ -10,6 +10,7 @@ IFS=$'\n\t'
 [ -z "${DEBUG:-}" ] || set -x
 
 # VARs
+APPDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd -P)"
 GIT_TAG="$(git describe --always --tags)"
 GIT_BRANCH="$(git symbolic-ref --short HEAD)"
 BUILD_PATH="${BUILD_PATH:-/}"
@@ -55,6 +56,8 @@ build_image(){
   deepen_git_repo
 
   echo 'Build the image with the specified arguments'
+  (
+  cd "${APPDIR}${BUILD_PATH}" # In Docker Hub this is `/` or `/dir`
   docker build \
     --build-arg VERSION="$GIT_TAG" \
     --build-arg VCS_URL="$(git config --get remote.origin.url)" \
@@ -63,6 +66,7 @@ build_image(){
     --file "$DOCKERFILE_PATH" \
     --tag "$IMAGE_NAME" \
     .
+  )
 }
 
 # Push

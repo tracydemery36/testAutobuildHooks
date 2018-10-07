@@ -12,7 +12,7 @@ IFS=$'\n\t'
 # VARs
 APPDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../" && pwd -P)"
 GIT_TAG="$(git describe --always --tags)"
-GIT_BRANCH="${GIT_BRANCH:-$(git symbolic-ref --short --quiet HEAD)}" # Specify the branch name manually when on a detached HEAD
+GIT_BRANCH="${GIT_BRANCH:-$(git symbolic-ref --short --quiet HEAD || echo)}" # Specify the branch name manually when on a detached HEAD
 BUILD_PATH="${BUILD_PATH:-/}"
 DOCKERFILE_PATH="${DOCKERFILE_PATH:-Dockerfile}"
 DOCKER_USERNAME="${DOCKER_USERNAME:-}"

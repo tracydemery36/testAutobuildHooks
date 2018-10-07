@@ -2,5 +2,6 @@
 
 echo "------ HOOK START - BUILD -------"
 printenv
+export DEBUG=true
 ./scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

@@ -1,5 +1,14 @@
 # Change Log
 
+## [v1.2.23](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.23) (2018-10-05)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.18...v1.2.23)
+
+## [v1.2.18](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.18) (2018-10-05)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.22...v1.2.18)
+
+## [v1.2.22](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.22) (2018-10-05)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.21...v1.2.22)
+
 ## [v1.2.21](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.21) (2018-10-05)
 [Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.20...v1.2.21)
 
@@ -7,13 +16,7 @@
 [Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.19...v1.2.20)
 
 ## [v1.2.19](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.19) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.18...v1.2.19)
-
-## [v1.2.18](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.18) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.22...v1.2.18)
-
-## [v1.2.22](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.22) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.17...v1.2.22)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.17...v1.2.19)
 
 ## [v1.2.17](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.17) (2018-10-05)
 [Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.16...v1.2.17)
@@ -25,13 +28,13 @@
 [Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.14...v1.2.15)
 
 ## [v1.2.14](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.14) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.12...v1.2.14)
-
-## [v1.2.12](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.12) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.13...v1.2.12)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.13...v1.2.14)
 
 ## [v1.2.13](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.13) (2018-10-05)
-[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.11...v1.2.13)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.12...v1.2.13)
+
+## [v1.2.12](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.12) (2018-10-05)
+[Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.11...v1.2.12)
 
 ## [v1.2.11](https://github.com/vladgh/testAutobuildHooks/tree/v1.2.11) (2018-10-05)
 [Full Changelog](https://github.com/vladgh/testAutobuildHooks/compare/v1.2.10...v1.2.11)

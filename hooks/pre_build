@@ -2,4 +2,7 @@
 
 echo "------ HOOK START - PRE_BUILD -------"
 printenv
+ruby --version
+gem list
+bundle --version
 echo "------ HOOK END - PRE_BUILD -------"

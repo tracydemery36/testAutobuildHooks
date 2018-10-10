@@ -4,6 +4,10 @@ echo "------ HOOK START - PRE_BUILD -------"
 printenv
 apt-get -qy update && apt-get -qy install ruby
 ruby --version
+gem install --no-ri --no-rdoc bundler
+(
+  cd ../
+  bundle install --without development --path vendor/bundle
+)
 gem list
-bundle --version
 echo "------ HOOK END - PRE_BUILD -------"

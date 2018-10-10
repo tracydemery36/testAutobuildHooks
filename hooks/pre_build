@@ -2,6 +2,7 @@
 
 echo "------ HOOK START - PRE_BUILD -------"
 printenv
+apt-get -qy update && apt-get -qy install ruby
 ruby --version
 gem list
 bundle --version

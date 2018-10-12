@@ -6,7 +6,7 @@ apt-get -qy update && apt-get -qy install ruby
 ruby --version
 gem install --no-ri --no-rdoc bundler
 (
-  cd ../
+  cd ../  || exit
   bundle install --without development --path vendor/bundle
 )
 gem list

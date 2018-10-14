@@ -20,6 +20,34 @@ DOCKER_REPO="${DOCKER_REPO:-}"
 DOCKER_TAG="${DOCKER_TAG:-latest}"
 IMAGE_NAME="${IMAGE_NAME:-${DOCKER_REPO}:${DOCKER_TAG}}"
 
+# Usage
+usage(){
+  echo '---------------------------------------------'
+  echo "USAGE: ${BASH_SOURCE[0]} [COMMAND]"
+  echo '---------------------------------------------'
+  echo 'Commands:'
+  echo ''
+  echo '  - build'
+  echo '    Builds image'
+  echo ''
+  echo '  - push'
+  echo '    Pushes the "latest" tag'
+  echo ''
+  echo '  - tag'
+  echo '    Tags the image with a semantic version, and pushes all tags'
+  echo ''
+  echo '  - notify'
+  echo '    Notifies MicroBadger if there is a MICROBADGER_TOKENS array'
+  echo ''
+  echo '  - test'
+  echo '    Tests image'
+  echo ''
+  echo '----------------------------------------------'
+  echo 'For more information please consult the README'
+  echo '----------------------------------------------'
+  exit 1
+}
+
 # Generate semantic version style tags
 generate_semantic_version(){
   # If tag matches semantic version
@@ -107,7 +135,7 @@ notify_microbadger(){
   # shellcheck disable=1090
   if [[ -s "$tokens_file" ]]; then . "$tokens_file"; fi
 
-  if [[ "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -a" ]]; then
+  if [[ "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -A" ]]; then
     local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
     local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
 
@@ -143,7 +171,7 @@ main(){
       test_image
       ;;
     *)
-      echo "'${cmd}' command is not implemented"
+      usage
       ;;
   esac
 }

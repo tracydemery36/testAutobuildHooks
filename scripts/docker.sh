@@ -104,12 +104,10 @@ tag_image(){
 notify_microbadger(){
   local tokens_file
   tokens_file="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
-  if [[ -s "$tokens_file" ]]; then
-    # shellcheck disable=1090
-    . "$tokens_file"
-  fi
+  # shellcheck disable=1090
+  if [[ -s "$tokens_file" ]]; then . "$tokens_file"; fi
 
-  if [[ ! "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -a" ]]; then
+  if [[ "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -a" ]]; then
     local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
     local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
 

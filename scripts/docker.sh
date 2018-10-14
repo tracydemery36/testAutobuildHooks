@@ -121,27 +121,36 @@ tag_image(){
 }
 
 # Notify Microbadger
-# Sample `.microbadger` tokens file or array:
+# Sample `.microbadger` file for a single repo:
+#    #!/usr/bin/env bash
+#    # MicroBadger URL
+#    export MICROBADGER_URL="https://hooks.microbadger.com/images/myuser/myrepo/ABCDEF="
+#
+# Sample `.microbadger` file for multiple repos with tokens array:
 #     #!/usr/bin/env bash
 #     # MicroBadger tokens
 #     declare -A MICROBADGER_TOKENS=(
-#       ['vladgh/testAutobuildHooks']='ABCDEF='
+#       ['myuser/myrepo']='ABCDEF='
 #     )
 #     export MICROBADGER_TOKENS
-
 notify_microbadger(){
-  local tokens_file
+  local tokens_file token microbadger_url
+
   tokens_file="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
   # shellcheck disable=1090
   if [[ -s "$tokens_file" ]]; then . "$tokens_file"; fi
 
-  if [[ "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -A" ]]; then
-    local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
-    local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
+  if [[ -n "${MICROBADGER_URL:-}" ]]; then
+    microbadger_url="$MICROBADGER_URL"
+  fi
 
-    if [[ -n "$token" ]]; then
-      echo "Notify MicroBadger: $(curl -sX POST "$url")"
-    fi
+  if [[ "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -A" ]]; then
+    token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
+    microbadger_url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
+  fi
+
+  if [[ -n "$microbadger_url" ]]; then
+    echo "Notify MicroBadger: $(curl -sX POST "$microbadger_url")"
   fi
 }
 

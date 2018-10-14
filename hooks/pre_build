@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+echo "------ HOOK START - PRE_BUILD -------"
+printenv
+
+# VGS
+git clone https://github.com/vghn/vgs.git ~/vgs
+
+# RUBY
+# apt-get -qy update && apt-get -qy install ruby
+# ruby --version
+# gem install --no-ri --no-rdoc bundler
+# (
+#   cd ../  || exit
+#   bundle install --without development --path vendor/bundle
+# )
+# gem list
+echo "------ HOOK END - PRE_BUILD -------"

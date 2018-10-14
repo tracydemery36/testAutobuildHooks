@@ -5,9 +5,9 @@ printenv
 
 export DEBUG=true
 if [[ "$DOCKER_TAG" == 'latest' ]]; then
-  ./scripts/docker.sh push
+  ~/vgs/scripts/docker.sh push
 fi
 if [[ "$SOURCE_BRANCH" =~ ^v[0-9]+ ]]; then
-  ./scripts/docker.sh tag
+  ~/vgs/scripts/docker.sh tag
 fi
 echo "------ HOOK END - PUSH -------"

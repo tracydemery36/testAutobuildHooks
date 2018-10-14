@@ -102,24 +102,20 @@ tag_image(){
 #     export MICROBADGER_TOKENS
 
 notify_microbadger(){
-  if [[ ! "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -a" ]]; then
-   return
-  fi
-
   local tokens_file
   tokens_file="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)/.microbadger"
   if [[ -s "$tokens_file" ]]; then
     # shellcheck disable=1090
     . "$tokens_file"
-  else
-    return
   fi
 
-  local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
-  local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
+  if [[ ! "$(declare -p MICROBADGER_TOKENS 2>/dev/null)" =~ "declare -a" ]]; then
+    local token="${MICROBADGER_TOKENS[${DOCKER_REPO}]:-}"
+    local url="https://hooks.microbadger.com/images/${DOCKER_REPO}/${token}"
 
-  if [[ -n "$token" ]]; then
-    echo "Notify MicroBadger: $(curl -sX POST "$url")"
+    if [[ -n "$token" ]]; then
+      echo "Notify MicroBadger: $(curl -sX POST "$url")"
+    fi
   fi
 }
 

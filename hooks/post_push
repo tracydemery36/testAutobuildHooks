@@ -3,5 +3,5 @@
 echo "------ HOOK START - POST_PUSH -------"
 printenv
 export DEBUG=true
-~/vgs/scripts/docker.sh notify
+MICROBADGER_FILE=./.microbadger ~/vgs/scripts/docker.sh notify
 echo "------ HOOK END - POST_PUSH -------"

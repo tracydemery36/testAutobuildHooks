@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-# MicroBadger URL
-export MICROBADGER_URL='https://hooks.microbadger.com/images/vladgh/testautobuildhooks/s4syH8TyWagZghflrtWCpnBKAAs='

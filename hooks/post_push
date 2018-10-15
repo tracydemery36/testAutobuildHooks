@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 echo "------ HOOK START - POST_PUSH -------"
+set -euo pipefail
+IFS=$'\n\t'
 printenv
 export DEBUG=true
 export MICROBADGER_URL='https://hooks.microbadger.com/images/vladgh/testautobuildhooks/s4syH8TyWagZghflrtWCpnBKAAs='

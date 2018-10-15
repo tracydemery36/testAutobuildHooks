@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 echo "------ HOOK START - PRE_BUILD -------"
+set -euo pipefail
+IFS=$'\n\t'
+
 printenv
 
 # VGS

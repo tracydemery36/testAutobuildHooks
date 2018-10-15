@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 echo "------ HOOK START - POST_CHECKOUT -------"
+set -euo pipefail
+IFS=$'\n\t'
 printenv
 echo "------ HOOK END - POST_CHECKOUT -------"

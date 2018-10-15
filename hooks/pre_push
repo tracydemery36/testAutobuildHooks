@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
 echo "------ HOOK START - PRE_PUSH -------"
+set -euo pipefail
+IFS=$'\n\t'
 printenv
 echo "------ HOOK END - PRE_PUSH -------"

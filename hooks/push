@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 echo "------ HOOK START - PUSH -------"
+set -euo pipefail
+IFS=$'\n\t'
+
 printenv
 
 export DEBUG=true

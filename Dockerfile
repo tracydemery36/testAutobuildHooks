@@ -1,5 +1,4 @@
-ARG BUILD_ARCH
-FROM $BUILD_ARCH/alpine
+FROM alpine:3.10
 MAINTAINER Vlad Ghinea "vlad@ghn.me"
 
 # Metadata params

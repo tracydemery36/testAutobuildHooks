@@ -5,6 +5,5 @@ set -euo pipefail
 IFS=$'\n\t'
 printenv
 export DEBUG=true
-docker run --rm --privileged multiarch/qemu-user-static:register --reset
 ~/vgs/scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

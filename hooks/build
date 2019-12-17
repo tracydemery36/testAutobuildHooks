@@ -5,6 +5,8 @@ set -euo pipefail
 IFS=$'\n\t'
 printenv
 export DEBUG=true
-docker buildx version
+docker manifest create vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-amd64 vladgh/testAutobuildHooks:2.2.2-arm64v8
+docker manifest annotate vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-arm64v8 --os linux --arch arm
+docker manifest push vladgh/testAutobuildHooks:2.2.2 --purge
 ~/vgs/scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

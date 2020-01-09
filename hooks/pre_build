@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-apt-get -qy update && apt-get -qy install wget
+docker --version
 
-mkdir -p ~/.docker/cli-plugins
-wget -O ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64
-chmod a+x ~/.docker/cli-plugins/docker-buildx
+# apt-get -qy update && apt-get -qy install wget
+
+# mkdir -p ~/.docker/cli-plugins
+# wget -O ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64
+# chmod a+x ~/.docker/cli-plugins/docker-buildx
 
 # echo "------ HOOK START - PRE_BUILD -------"
 # set -euo pipefail

@@ -2,6 +2,7 @@
 
 docker --version
 
+apt-get -qy update && apt-get -qy install docker-ce
 # apt-get -qy update && apt-get -qy install wget
 
 # mkdir -p ~/.docker/cli-plugins

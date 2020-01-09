@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
-echo "------ HOOK START - PRE_BUILD -------"
-set -euo pipefail
-IFS=$'\n\t'
+mkdir -p ~/.docker/cli-plugins
+wget -O ~/.docker/cli-plugins/docker-buildx https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64
+chmod a+x ~/.docker/cli-plugins/docker-buildx
 
-printenv
+# echo "------ HOOK START - PRE_BUILD -------"
+# set -euo pipefail
+# IFS=$'\n\t'
+
+# printenv
 
 # VGS
-git clone https://github.com/vghn/vgs.git ~/vgs
+# git clone https://github.com/vghn/vgs.git ~/vgs
 
 # RUBY
 # apt-get -qy update && apt-get -qy install ruby
@@ -18,4 +22,4 @@ git clone https://github.com/vghn/vgs.git ~/vgs
 #   bundle install --without development --path vendor/bundle
 # )
 # gem list
-echo "------ HOOK END - PRE_BUILD -------"
+# echo "------ HOOK END - PRE_BUILD -------"

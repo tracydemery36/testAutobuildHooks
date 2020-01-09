@@ -3,10 +3,16 @@
 echo "------ HOOK START - BUILD -------"
 set -euo pipefail
 IFS=$'\n\t'
-printenv
+# printenv
 export DEBUG=true
-docker manifest create vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-amd64 vladgh/testAutobuildHooks:2.2.2-arm64v8
-docker manifest annotate vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-arm64v8 --os linux --arch arm
-docker manifest push vladgh/testAutobuildHooks:2.2.2 --purge
-~/vgs/scripts/docker.sh build
+
+docker buildx create --use --name testAutobuildHooks node-amd64
+docker buildx create --append --name testAutobuildHooks node-arm64
+
+docker buildx build --platform linux/amd64,linux/arm64 -t vladgh/testAutobuildHooks:latest .
+
+# docker manifest create vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-amd64 vladgh/testAutobuildHooks:2.2.2-arm64v8
+# docker manifest annotate vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-arm64v8 --os linux --arch arm
+# docker manifest push vladgh/testAutobuildHooks:2.2.2 --purge
+# ~/vgs/scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

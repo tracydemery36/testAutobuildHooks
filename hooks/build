@@ -11,6 +11,7 @@ apt-get -qy update && apt-get -qy install wget
 # docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
 wget -q "https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64"
+mkdir -p ~/.docker/cli-plugins
 mv buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
 chmod a+x ~/.docker/cli-plugins/docker-buildx
 

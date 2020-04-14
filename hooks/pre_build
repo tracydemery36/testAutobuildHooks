@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-apt-get -qy update && apt-get -qy install curl
-curl -fsSL https://get.docker.com -o get-docker.sh
-sh get-docker.sh
-
 # apt-get -qy update && apt-get -qy install wget
 
 # mkdir -p ~/.docker/cli-plugins

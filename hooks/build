@@ -5,14 +5,12 @@ set -euo pipefail
 IFS=$'\n\t'
 # printenv
 export DEBUG=true
+export DOCKER_CLI_EXPERIMENTAL=enabled
 
-docker buildx create --use --name testAutobuildHooks node-amd64
-docker buildx create --append --name testAutobuildHooks node-arm64
+docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
-docker buildx build --platform linux/amd64,linux/arm64 -t vladgh/testAutobuildHooks:latest .
+docker buildx create --name multi_arch_builder --use
+docker buildx build --rm --pull --push --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 -t vladgh/testAutobuildHooks:latest -t vladgh/testAutobuildHooks:1 -t vladgh/testAutobuildHooks:1.4 -t vladgh/testAutobuildHooks:1.4.3 .
+docker buildx rm multi_arch_builder
 
-# docker manifest create vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-amd64 vladgh/testAutobuildHooks:2.2.2-arm64v8
-# docker manifest annotate vladgh/testAutobuildHooks:2.2.2 vladgh/testAutobuildHooks:2.2.2-arm64v8 --os linux --arch arm
-# docker manifest push vladgh/testAutobuildHooks:2.2.2 --purge
-# ~/vgs/scripts/docker.sh build
 echo "------ HOOK END - BUILD -------"

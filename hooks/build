@@ -4,7 +4,7 @@ echo "------ HOOK START - BUILD -------"
 set -euo pipefail
 IFS=$'\n\t'
 # printenv
-export DEBUG=true
+# export DEBUG=true
 
 apt-get -y update
 apt-get -y --only-upgrade install docker-ee

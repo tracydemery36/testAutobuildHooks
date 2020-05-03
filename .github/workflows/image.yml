@@ -6,8 +6,8 @@ on:
       - master
 
 jobs:
-  build-latest-docker-image:
-    name: Build and push Docker images
+  build:
+    name: Build Docker images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -20,15 +20,9 @@ jobs:
           version: latest
       - name: Build the image
         run: |
+          echo "$GIT_TAG"
           docker buildx build --rm --pull --push \
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
             --tag vladgh/testautobuildhooks:latest \
             --tag vladgh/testautobuildhooks:$(date +%s) \
             .
-
-      # - name: Build the Docker image
-      #   run: docker build . --file Dockerfile --tag 'vladgh/testautobuildhooks:latest'
-      # - name: Push
-      #   run: docker push 'vladgh/testautobuildhooks:latest'
-      # - name: Build the Docker image
-      #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)

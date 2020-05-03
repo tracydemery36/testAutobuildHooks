@@ -13,9 +13,22 @@ jobs:
       - uses: actions/checkout@v2
       - name: Docker login
         run: "docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}"
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag 'vladgh/testautobuildhooks:latest'
-      - name: Push
-        run: docker push 'vladgh/testautobuildhooks:latest'
+      - name: Install BuildX
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+      - name: Build the image
+        run: |
+          docker buildx build \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
+            --tag vladgh/testautobuildhooks:latest \
+            --tag vladgh/testautobuildhooks:$(date +%s) \
+            .
+
+      # - name: Build the Docker image
+      #   run: docker build . --file Dockerfile --tag 'vladgh/testautobuildhooks:latest'
+      # - name: Push
+      #   run: docker push 'vladgh/testautobuildhooks:latest'
       # - name: Build the Docker image
       #   run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)

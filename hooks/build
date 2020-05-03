@@ -12,12 +12,12 @@ apt-get -qy update && apt-get -qy install wget
 
 export DOCKER_BUILDKIT=1
 
-# docker build --platform=local -o . git://github.com/docker/buildx
-# mkdir -p ~/.docker/cli-plugins
-# mv buildx ~/.docker/cli-plugins/docker-buildx
-
+docker build --platform=local -o . git://github.com/docker/buildx
 mkdir -p ~/.docker/cli-plugins
-wget -q -o  ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/v0.4.1/buildx-v0.4.1.linux-amd64"
+mv buildx ~/.docker/cli-plugins/docker-buildx
+
+# mkdir -p ~/.docker/cli-plugins
+# wget -q -o  ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/v0.4.1/buildx-v0.4.1.linux-amd64"
 
 docker buildx --help
 

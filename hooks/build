@@ -10,10 +10,10 @@ apt-get -qy update && apt-get -qy install wget
 
 # docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
+export DOCKER_BUILDKIT=1
 git clone git://github.com/docker/buildx && cd buildx
 make install
 
-# export DOCKER_BUILDKIT=1
 
 # docker build --platform=local -o . git://github.com/docker/buildx
 # mkdir -p ~/.docker/cli-plugins

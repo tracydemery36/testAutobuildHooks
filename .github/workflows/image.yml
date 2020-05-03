@@ -116,5 +116,4 @@ jobs:
             --platform "${DOCKER_PLATFORM}" \
             "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
-        run: |
-          echo "Notify MicroBadger: $(curl --request POST --silent --fail https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN})"
+        run: curl --request POST --silent --fail https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN}"

@@ -27,6 +27,11 @@ jobs:
           version: latest
       - name: Build the image
         run: |
+          docker buildx build --rm --pull --push \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
+            --tag vladgh/testautobuildhooks:latest \
+            .
+
           # If tag matches semantic version
           if [[ "${{ steps.get_version.outputs.VERSION }}" == v* ]]; then
             # Break the version into components
@@ -37,16 +42,10 @@ jobs:
             export major="${semver[0]}"
             export minor="${semver[1]}"
             export patch="${semver[2]}"
-            docker buildx build --rm --pull --push \
-              --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-              --tag vladgh/testautobuildhooks:"${major}.${minor}.${patch}" \
-              --tag vladgh/testautobuildhooks:latest \
-              --tag vladgh/testautobuildhooks:$(date +%s) \
-              .
+
+            for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
+              echo "Pushing version (vladgh/testautobuildhooks:${version})"
+              docker tag latest "vladgh/testautobuildhooks:${version}"
+              docker push "vladgh/testautobuildhooks:${version}"
+            done
           fi
-          # docker buildx build --rm --pull --push \
-          #   --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-          #   --tag vladgh/testautobuildhooks:"${major}.${minor}.${patch}" \
-          #   --tag vladgh/testautobuildhooks:latest \
-          #   --tag vladgh/testautobuildhooks:$(date +%s) \
-          #   .

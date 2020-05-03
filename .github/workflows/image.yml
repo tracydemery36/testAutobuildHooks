@@ -83,13 +83,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Docker login
-        run: "docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}"
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::"$(git describe --always --tags)"
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" –password-stdin
       - name: Set VARs
         run: |
-          echo ::set-env name=VERSION::"$(git describe --always --tags)"
+          echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
           echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
           echo ::set-env name=DOCKER_BUILD_PATH::"${{ matrix.image.path }}"
@@ -102,18 +99,14 @@ jobs:
           qemu-version: latest
       - name: Build the image
         run: |
-          export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest"
+          export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
 
-          # If tag matches semantic version
-          GIT_TAG="${{ steps.get_version.outputs.VERSION }}"
           if [[ "$GIT_TAG" == v* ]]; then
-            # Break the version into components
             semver="${GIT_TAG#v}" # Remove the 'v' prefix
             semver="${semver%%-*}" # Remove the commit number
             IFS="." read -r -a semver <<< "$semver" # Create an array with version numbers
 
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
-
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
@@ -122,5 +115,6 @@ jobs:
           eval docker buildx build --rm --pull --push \
             --platform "${DOCKER_PLATFORM}" \
             "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
-
-          echo "Notify MicroBadger: $(curl -sX POST https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN})"
+      - name: Notify MicroBadger
+        run: |
+          echo "Notify MicroBadger: $(curl --request POST --silent --fail https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN})"

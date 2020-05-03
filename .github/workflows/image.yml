@@ -46,7 +46,7 @@ jobs:
 
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               echo "Pushing version (vladgh/testautobuildhooks:${version})"
-              docker tag latest "vladgh/testautobuildhooks:${version}"
+              docker tag vladgh/testautobuildhooks:latest "vladgh/testautobuildhooks:${version}"
               docker push "vladgh/testautobuildhooks:${version}"
             done
           fi

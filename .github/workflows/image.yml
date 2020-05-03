@@ -11,23 +11,98 @@ jobs:
   build:
     name: Build Docker images
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - repo: vladgh/testautobuildhooks
+            path: testpath
+            platform: linux/386,linux/amd64
+            token: 1LIUNGTtioEcpHJoQZzwK3qQPhE=
+          # - repo: vladgh/apache
+          #   path: apache
+          #   platform: linux/386,linux/amd64
+          #   token: 1LIUNGTtioEcpHJoQZzwK3qQPhE=
+          # - repo: vladgh/awscli
+          #   path: awscli
+          #   platform: linux/386,linux/amd64
+          #   token: mbMppUV6he_zmIGik-MeJ22K8a0=
+          # - repo: vladgh/backup
+          #   path: backup
+          #   platform: linux/386,linux/amd64
+          #   token: ZjbRHMtrAhl9V2MWjWmOR0KWlGc=
+          # - repo: vladgh/deluge
+          #   path: deluge
+          #   platform: linux/386,linux/amd64
+          #   token: BvOV7ec7tt2N207sgMKqFrGzSxs=
+          # - repo: vladgh/fpm
+          #   path: fpm
+          #   platform: linux/386,linux/amd64
+          #   token: OG17Glgq8CvSRFJjkK5vdC_pn_A=
+          # - repo: vladgh/gpg
+          #   path: gpg
+          #   platform: linux/386,linux/amd64
+          #   token: Sg_CkaULmDjZ0K3u5W1mIqXlkOk=
+          # - repo: vladgh/minidlna
+          #   path: minidlna
+          #   platform: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8
+          #   token: Qr9rUtKpdDGoUVh3tGwGTBzSmQ8=
+          # - repo: vladgh/puppet
+          #   path: puppet
+          #   platform: linux/386,linux/amd64
+          #   token: uj5nZE_tFQ3DyNFvERhnamfJbis=
+          # - repo: vladgh/puppetboard
+          #   path: puppetboard
+          #   platform: linux/386,linux/amd64
+          #   token: hS1FQBmTy1gQvGTzzBbGVkeGEYs=
+          # - repo: vladgh/puppetdb
+          #   path: puppetdb
+          #   platform: linux/386,linux/amd64
+          #   token: eLBcOfMSKHB7seTlBGvZD8VjK4A=
+          # - repo: vladgh/puppetserver
+          #   path: puppetserver
+          #   platform: linux/386,linux/amd64
+          #   token: Z8Ruox6vyG737HPGY6VKyeuL5qU=
+          # - repo: vladgh/puppetserverdb
+          #   path: puppetserverdb
+          #   platform: linux/386,linux/amd64
+          #   token: 8d7IFiC0YkD1xJinK5UtgkQ88V0=
+          # - repo: vladgh/r10k
+          #   path: r10k
+          #   platform: linux/386,linux/amd64
+          #   token: OvMmZQPNL_0s5G-CYxrRmNFMDxE=
+          # - repo: vladgh/s3sync
+          #   path: s3sync
+          #   platform: linux/386,linux/amd64
+          #   token: eB40MYq66N9GQvIisktwJVOL_tw=
+          # - repo: vladgh/webhook
+          #   path: webhook
+          #   platform: linux/386,linux/amd64
+          #   token: tRhT7nPREdQwptZxaMHDTgrazYY=
     steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::"${GITHUB_REF/refs\/tags\//}"
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Docker login
         run: "docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}"
-      - name: Install BuildX
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::"$(git describe --always --tags)"
+      - name: Set VARs
+        run: |
+          echo ::set-env name=VERSION::"$(git describe --always --tags)"
+          echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
+          echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
+          echo ::set-env name=DOCKER_BUILD_PATH::"${{ matrix.image.path }}"
+          echo ::set-env name=MICROBADGER_TOKEN::"${{ matrix.image.token }}"
+      - name: Set up Docker Buildx
         id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
-          version: latest
+          buildx-version: latest
+          qemu-version: latest
       - name: Build the image
         run: |
-          export DOCKER_TAGS="--tag vladgh/testautobuildhooks:latest"
+          export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest"
 
           # If tag matches semantic version
           GIT_TAG="${{ steps.get_version.outputs.VERSION }}"
@@ -40,10 +115,12 @@ jobs:
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
 
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
-              export DOCKER_TAGS="${DOCKER_TAGS} --tag vladgh/testautobuildhooks:${version}"
+              export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
           fi
 
           eval docker buildx build --rm --pull --push \
-            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-            "${DOCKER_TAGS}" .
+            --platform "${DOCKER_PLATFORM}" \
+            "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
+
+          echo "Notify MicroBadger: $(curl -sX POST https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN})"

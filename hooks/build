@@ -6,13 +6,30 @@ IFS=$'\n\t'
 # printenv
 export DEBUG=true
 
-apt-get -qy update && apt-get -qy install wget
+apt-get -y update
+apt-get -y --only-upgrade install docker-ee
+docker info
+docker run \
+  --rm \
+  --privileged \
+  multiarch/qemu-user-static:register --reset
+echo "##################  start buildx tasks  ##################"
+docker buildx ls
+echo "##################  Create new buildx builder  ##################"
+docker buildx create --name mybuilder
+echo "##################  Use new buildx builder  ##################"
+docker buildx use mybuilder
+echo "##################  Inspect buildx builder  ##################"
+docker buildx inspect --bootstrap
+echo "################## done with pre_build  ##################"
+
+# apt-get -qy update && apt-get -qy install wget
 
 # docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
-export DOCKER_BUILDKIT=1
-git clone git://github.com/docker/buildx && cd buildx
-make install
+# export DOCKER_BUILDKIT=1
+# git clone git://github.com/docker/buildx && cd buildx
+# make install
 
 
 # docker build --platform=local -o . git://github.com/docker/buildx

@@ -20,7 +20,7 @@ jobs:
           version: latest
       - name: Build the image
         run: |
-          docker buildx build \
+          docker buildx build --rm --pull --push \
             --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
             --tag vladgh/testautobuildhooks:latest \
             --tag vladgh/testautobuildhooks:$(date +%s) \

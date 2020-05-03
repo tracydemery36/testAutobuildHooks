@@ -10,14 +10,21 @@ apt-get -qy update && apt-get -qy install wget
 
 # docker run --rm --privileged docker/binfmt:a7996909642ee92942dcd6cff44b9b95f08dad64
 
-wget -q "https://github.com/docker/buildx/releases/download/v0.3.1/buildx-v0.3.1.linux-amd64"
-mkdir -p ~/.docker/cli-plugins
-mv buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
-chmod a+x ~/.docker/cli-plugins/docker-buildx
+export DOCKER_BUILDKIT=1
+$ docker build --platform=local -o . git://github.com/docker/buildx
+$ mkdir -p ~/.docker/cli-plugins
+$ mv buildx ~/.docker/cli-plugins/docker-buildx
 
-export DOCKER_CLI_EXPERIMENTAL=enabled
-docker buildx create --name multi_arch_builder --use
-docker buildx build --rm --pull --push --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 -t vladgh/testAutobuildHooks:latest -t vladgh/testAutobuildHooks:1 -t vladgh/testAutobuildHooks:1.4 -t vladgh/testAutobuildHooks:1.4.3 .
-docker buildx rm multi_arch_builder
+docker buildx --help
+
+# wget -q "https://github.com/docker/buildx/releases/download/v0.4.1/buildx-v0.4.1.linux-amd64"
+# mkdir -p ~/.docker/cli-plugins
+# mv buildx-v0.3.1.linux-amd64 ~/.docker/cli-plugins/docker-buildx
+# chmod a+x ~/.docker/cli-plugins/docker-buildx
+
+# export DOCKER_CLI_EXPERIMENTAL=enabled
+# docker buildx create --name multi_arch_builder --use
+# docker buildx build --rm --pull --push --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 -t vladgh/testAutobuildHooks:latest -t vladgh/testAutobuildHooks:1 -t vladgh/testAutobuildHooks:1.4 -t vladgh/testAutobuildHooks:1.4.3 .
+# docker buildx rm multi_arch_builder
 
 echo "------ HOOK END - BUILD -------"

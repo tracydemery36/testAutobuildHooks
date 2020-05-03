@@ -27,10 +27,7 @@ jobs:
           version: latest
       - name: Build the image
         run: |
-          docker buildx build --pull --push \
-            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
-            --tag vladgh/testautobuildhooks:latest \
-            .
+          export DOCKER_TAGS="--tag vladgh/testautobuildhooks:latest"
 
           # If tag matches semantic version
           GIT_TAG="${{ steps.get_version.outputs.VERSION }}"
@@ -40,13 +37,13 @@ jobs:
             semver="${semver%%-*}" # Remove the commit number
             IFS="." read -r -a semver <<< "$semver" # Create an array with version numbers
 
-            export major="${semver[0]}"
-            export minor="${semver[1]}"
-            export patch="${semver[2]}"
+            export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
 
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
-              echo "Pushing version (vladgh/testautobuildhooks:${version})"
-              docker tag vladgh/testautobuildhooks:latest "vladgh/testautobuildhooks:${version}"
-              docker push "vladgh/testautobuildhooks:${version}"
+              export DOCKER_TAGS="${DOCKER_TAGS} --tag vladgh/testautobuildhooks:${version}"
             done
           fi
+
+          eval docker buildx build --rm --pull --push \
+            --platform linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64/v8 \
+            "${DOCKER_TAGS}" .

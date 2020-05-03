@@ -33,7 +33,8 @@ jobs:
             .
 
           # If tag matches semantic version
-          if [[ "${{ steps.get_version.outputs.VERSION }}" == v* ]]; then
+          GIT_TAG="${{ steps.get_version.outputs.VERSION }}"
+          if [[ "$GIT_TAG" == v* ]]; then
             # Break the version into components
             semver="${GIT_TAG#v}" # Remove the 'v' prefix
             semver="${semver%%-*}" # Remove the commit number

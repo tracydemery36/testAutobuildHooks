@@ -116,25 +116,32 @@ jobs:
         run: |
           export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
 
-          if [[ "$GIT_TAG" == v* ]]; then
-            semver="${GIT_TAG#v}" # Remove the 'v' prefix
-            semver="${semver%%-*}" # Remove the commit number
-            IFS="." read -r -a semver <<< "$semver" # Create an array with version numbers
+          # if [[ "$GIT_TAG" == v* ]]; then
+          #   semver="${GIT_TAG#v}" # Remove the 'v' prefix
+          #   semver="${semver%%-*}" # Remove the commit number
+          #   IFS="." read -r -a semver <<< "$semver" # Create an array with version numbers
 
+          #   export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
+          #   for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
+          #     export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
+          #   done
+          # fi
+
+          export DOCKER_CLI_EXPERIMENTAL=enabled
+          if ! docker manifest inspect "${DOCKER_REPO}:${version}" >/dev/null; then
+            IFS="." read -r -a semver <<< "$semver"
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
+            eval docker buildx build --rm --pull --push \
+              --platform "${DOCKER_PLATFORM}" \
+              "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
           fi
 
-          export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest inspect "${DOCKER_REPO}:latest" > /dev/null ; echo $?
-          docker manifest inspect "${DOCKER_REPO}:${major}.${minor}.${patch}" > /dev/null ; echo $?
-          docker manifest inspect "${DOCKER_REPO}:${GIT_TAG}" > /dev/null ; echo $?
-
-          eval docker buildx build --rm --pull --push \
-            --platform "${DOCKER_PLATFORM}" \
-            "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
+          # eval docker buildx build --rm --pull --push \
+          #   --platform "${DOCKER_PLATFORM}" \
+          #   "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
         run: |
           if [[ -n "$MICROBADGER_TOKEN" ]]; then

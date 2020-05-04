@@ -134,14 +134,16 @@ jobs:
           export DOCKER_CLI_EXPERIMENTAL=enabled
           export VERSION=${{ matrix.image.version }}
           if ! docker manifest inspect "${DOCKER_REPO}:${VERSION}" >/dev/null; then
+            eval docker buildx build --rm --pull --output type=docker \
+              --platform "${DOCKER_PLATFORM}" \
+              --tag ${DOCKER_REPO}:${GIT_TAG}" \
+              "${DOCKER_BUILD_PATH}"
+            docker image ls
             IFS="." read -r -a semver <<< "$VERSION"
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
-            eval docker buildx build --rm --pull --push \
-              --platform "${DOCKER_PLATFORM}" \
-              "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
           fi
       - name: Notify MicroBadger
         run: |

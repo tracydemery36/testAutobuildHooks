@@ -108,13 +108,10 @@ jobs:
           echo ::set-env name=DOCKER_BUILD_PATH::"${{ matrix.image.path }}"
           echo ::set-env name=MICROBADGER_TOKEN::"${{ matrix.image.token }}"
       - name: Set up Docker Buildx
-        id: buildx
         uses: crazy-max/ghaction-docker-buildx@v1
         with:
           buildx-version: latest
           qemu-version: latest
-      # FIXME: docker push does not preserve platform & docker buildx does not override tag on docker hub
-      # TODO: Add docker args to buildx or build
       #     docker build \
       # --build-arg VERSION="$GIT_TAG" \
       # --build-arg VCS_URL="$(git config --get remote.origin.url)" \
@@ -141,10 +138,14 @@ jobs:
       #     eval docker buildx build --rm --pull --push \
       #       --platform "${DOCKER_PLATFORM}" \
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
-      # TODO: if tag ref master push to latest
       - name: Build the image with specified version
         run: |
           export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
+
+          TOKEN=$( curl -sSLd "username=${{ secrets.DOCKER_USERNAME }}&password=${{ secrets.DOCKER_PASSWORD }}" https://hub.docker.com/v2/users/login | jq -r ".token" )
+          curl -sH "Authorization: JWT $TOKEN" "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" | jq .
+
+          # Needed by `docker manifest` command
           export DOCKER_CLI_EXPERIMENTAL=enabled
 
           if ! docker manifest inspect "${DOCKER_REPO}:${VERSION}" >/dev/null; then

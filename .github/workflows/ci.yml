@@ -155,9 +155,7 @@ jobs:
           fi
 
           eval docker buildx build --rm --pull --push \
-            --platform "${DOCKER_PLATFORM}" \
-            --tag "${DOCKER_TAGS}" \
-            "${DOCKER_BUILD_PATH}"
+            --platform "${DOCKER_PLATFORM}" "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
         run: |
           if [[ -n "$MICROBADGER_TOKEN" ]]; then

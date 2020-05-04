@@ -132,4 +132,6 @@ jobs:
             "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
         run: |
-          [[ -n "$MICROBADGER_TOKEN" ]] && curl --request POST --silent --fail "https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN}"
+          if [[ -n "$MICROBADGER_TOKEN" ]]; then
+            curl --request POST --silent --fail "https://hooks.microbadger.com/images/${DOCKER_REPO}/${MICROBADGER_TOKEN}"
+          fi

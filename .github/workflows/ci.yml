@@ -18,7 +18,7 @@ jobs:
           - repo: vladgh/testautobuildhooks
             path: testpath
             platform: linux/amd64
-            version: '1.5.4'
+            version: '1.5.5'
           # - repo: vladgh/apache
           #   path: apache
           #   platform: linux/386,linux/amd64
@@ -139,11 +139,9 @@ jobs:
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
-            eval docker buildx build --rm --pull --output "type=local,push=false" \
+            eval docker buildx build --rm --pull --push \
               --platform "${DOCKER_PLATFORM}" \
-              --tag ${DOCKER_REPO}:${GIT_TAG} \
-              "${DOCKER_BUILD_PATH}"
-            docker image ls
+              "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
           fi
       - name: Notify MicroBadger
         run: |

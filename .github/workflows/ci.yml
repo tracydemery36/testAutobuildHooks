@@ -112,14 +112,7 @@ jobs:
         with:
           buildx-version: latest
           qemu-version: latest
-      #     docker build \
-      # --build-arg VERSION="$GIT_TAG" \
-      # --build-arg VCS_URL="$(git config --get remote.origin.url)" \
-      # --build-arg VCS_REF="$(git rev-parse --short HEAD)" \
-      # --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-      # --file "$DOCKERFILE_PATH" \
-      # --tag "$DOCKER_IMAGE_NAME" \
-      # .
+
       # - name: Build the image with git tag version
       #   run: |
       #     export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
@@ -137,6 +130,10 @@ jobs:
 
       #     eval docker buildx build --rm --pull --push \
       #       --platform "${DOCKER_PLATFORM}" \
+      #       --build-arg VERSION="$GIT_TAG" \
+      #       --build-arg VCS_URL="$(git config --get remote.origin.url)" \
+      #       --build-arg VCS_REF="$(git rev-parse --short HEAD)" \
+      #       --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Build the image with specified version
         run: |

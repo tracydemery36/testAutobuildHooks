@@ -127,6 +127,10 @@ jobs:
           #   done
           # fi
 
+          # eval docker buildx build --rm --pull --push \
+          #   --platform "${DOCKER_PLATFORM}" \
+          #   "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
+
           export DOCKER_CLI_EXPERIMENTAL=enabled
           export VERSION=${{ matrix.image.version }}
           if ! docker manifest inspect "${DOCKER_REPO}:${VERSION}" >/dev/null; then
@@ -139,10 +143,6 @@ jobs:
               --platform "${DOCKER_PLATFORM}" \
               "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
           fi
-
-          # eval docker buildx build --rm --pull --push \
-          #   --platform "${DOCKER_PLATFORM}" \
-          #   "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
         run: |
           if [[ -n "$MICROBADGER_TOKEN" ]]; then

@@ -17,8 +17,8 @@ jobs:
         image:
           - repo: vladgh/testautobuildhooks
             path: testpath
-            # platform: linux/amd64
-            # version: '0.4.0'
+            platform: linux/amd64
+            version: '0.4.0'
           # - repo: vladgh/apache
           #   path: apache
           #   platform: linux/386,linux/amd64
@@ -103,8 +103,7 @@ jobs:
         run: |
           echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
-          DOCKER_PLATFORM="${${{ matrix.image.platform }}:-'linux/amd64'"
-          echo ::set-env name=DOCKER_PLATFORM::${DOCKER_PLATFORM}
+          echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
           echo ::set-env name=DOCKER_BUILD_PATH::"${{ matrix.image.path }}"
           echo ::set-env name=MICROBADGER_TOKEN::"${{ matrix.image.token }}"
       - name: Set up Docker Buildx
@@ -127,6 +126,9 @@ jobs:
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
           fi
+
+          docker manifest inspect {DOCKER_REPO}:latest > /dev/null ; echo $?
+          docker manifest inspect {DOCKER_REPO}:${GIT_TAG} > /dev/null ; echo $?
 
           eval docker buildx build --rm --pull --push \
             --platform "${DOCKER_PLATFORM}" \

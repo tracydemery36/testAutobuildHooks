@@ -128,8 +128,9 @@ jobs:
           # fi
 
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          if ! docker manifest inspect "${DOCKER_REPO}:${version}" >/dev/null; then
-            IFS="." read -r -a semver <<< "$semver"
+          export VERSION=${{ matrix.image.version }}
+          if ! docker manifest inspect "${DOCKER_REPO}:${VERSION}" >/dev/null; then
+            IFS="." read -r -a semver <<< "$VERSION"
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"

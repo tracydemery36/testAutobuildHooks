@@ -154,7 +154,7 @@ jobs:
             done
           fi
 
-          eval docker buildx build --rm --pull --output type=docker \
+          eval docker buildx build --rm --pull --push \
             --platform "${DOCKER_PLATFORM}" \
             --tag "${DOCKER_REPO}:${GIT_TAG}" \
             "${DOCKER_BUILD_PATH}"

@@ -103,7 +103,7 @@ jobs:
         run: |
           echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
-          echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
+          echo ::set-env name=DOCKER_PLATFORM::"${${{ matrix.image.platform }}:-'linux/amd64'"
           echo ::set-env name=DOCKER_BUILD_PATH::"${{ matrix.image.path }}"
           echo ::set-env name=MICROBADGER_TOKEN::"${{ matrix.image.token }}"
       - name: Set up Docker Buildx

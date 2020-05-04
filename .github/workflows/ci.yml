@@ -156,7 +156,7 @@ jobs:
 
           eval docker buildx build --rm --pull --push \
             --platform "${DOCKER_PLATFORM}" \
-            --tag "${DOCKER_REPO}:${GIT_TAG}" \
+            --tag "${DOCKER_TAGS}" \
             "${DOCKER_BUILD_PATH}"
       - name: Notify MicroBadger
         run: |

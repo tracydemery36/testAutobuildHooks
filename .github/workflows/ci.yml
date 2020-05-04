@@ -17,7 +17,7 @@ jobs:
         image:
           - repo: vladgh/testautobuildhooks
             path: testpath
-            platform: linux/386,linux/amd64
+            platform: linux/amd64,linux/arm64
             version: '1.5.8'
           # - repo: vladgh/apache
           #   path: apache
@@ -141,6 +141,7 @@ jobs:
       #     eval docker buildx build --rm --pull --push \
       #       --platform "${DOCKER_PLATFORM}" \
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
+      # TODO: if tag ref master push to latest
       - name: Build the image with specified version
         run: |
           export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"

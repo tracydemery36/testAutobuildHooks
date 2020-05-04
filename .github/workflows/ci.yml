@@ -128,8 +128,8 @@ jobs:
           fi
 
           export DOCKER_CLI_EXPERIMENTAL=enabled
-          docker manifest inspect {DOCKER_REPO}:latest > /dev/null ; echo $?
-          docker manifest inspect {DOCKER_REPO}:${GIT_TAG} > /dev/null ; echo $?
+          docker manifest inspect "${DOCKER_REPO}:latest" > /dev/null ; echo $?
+          docker manifest inspect "${DOCKER_REPO}:${GIT_TAG}" > /dev/null ; echo $?
 
           eval docker buildx build --rm --pull --push \
             --platform "${DOCKER_PLATFORM}" \

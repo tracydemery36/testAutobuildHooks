@@ -18,7 +18,7 @@ jobs:
           - repo: vladgh/testautobuildhooks
             path: testpath
             platform: linux/amd64,linux/arm64
-            version: '1.5.8'
+            version: '1.5.9'
           # - repo: vladgh/apache
           #   path: apache
           #   platform: linux/386,linux/amd64

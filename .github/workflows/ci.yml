@@ -139,10 +139,13 @@ jobs:
               --tag "${DOCKER_REPO}:${GIT_TAG}" \
               "${DOCKER_BUILD_PATH}"
             docker push "${DOCKER_REPO}:${GIT_TAG}"
+
+            docker tag "${DOCKER_REPO}:${GIT_TAG}" "${DOCKER_REPO}:latest"
             docker push "${DOCKER_REPO}:latest"
             IFS="." read -r -a semver <<< "$VERSION"
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
+              docker tag "${DOCKER_REPO}:${GIT_TAG}"  "${DOCKER_REPO}:${version}"
               docker push "${DOCKER_REPO}:${version}"
               # export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done

@@ -139,9 +139,11 @@ jobs:
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
-            eval docker buildx build --rm --pull --push \
+            eval docker buildx build --rm --pull \
               --platform "${DOCKER_PLATFORM}" \
-              "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
+              --tag ${DOCKER_REPO}:${GIT_TAG} \
+              "${DOCKER_BUILD_PATH}"
+            docker image ls
           fi
       - name: Notify MicroBadger
         run: |

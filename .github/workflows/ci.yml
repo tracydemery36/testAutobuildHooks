@@ -96,7 +96,7 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Set VARs
         run: |
-          echo ::set-env name=GIT_SHA::"$(github.sha)"
+          echo ::set-env name=GIT_SHA::"${{ github.sha }}"
           echo ::set-env name=GIT_REF::"${{ github.ref }}"
           echo ::set-env name=GIT_EVENT::"${{ github.event }}"
           echo ::set-env name=VERSION::"${{ matrix.image.version }}"

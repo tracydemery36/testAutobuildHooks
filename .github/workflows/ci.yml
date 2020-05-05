@@ -1,15 +1,6 @@
 name: Docker Image CI
 
-on:
-  push:
-    branches:
-      - master
-    tags:
-      - v*
-  pull_request:
-    types: [opened, synchronize, reopened]
-
-# test
+on: [push, pull_request]
 
 jobs:
   build:

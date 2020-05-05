@@ -1,6 +1,6 @@
-name: Docker Image CI
+name: Docker Image CI Test
 
-on: [push, pull_request]
+on: push
 
 jobs:
   build:
@@ -13,7 +13,7 @@ jobs:
           - repo: vladgh/testautobuildhooks
             path: testpath
             platform: linux/amd64
-            version: '1.5.10'
+            version: '1.5.12'
           # - repo: vladgh/apache
           #   path: apache
           #   platform: linux/386,linux/amd64
@@ -96,7 +96,9 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Set VARs
         run: |
-          echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
+          echo ::set-env name=GIT_SHA::"${{ github.sha }}"
+          echo ::set-env name=GIT_REF::"${{ github.ref }}"
+          echo ::set-env name=GIT_EVENT::"${{ github.event }}"
           echo ::set-env name=VERSION::"${{ matrix.image.version }}"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
           echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
@@ -131,20 +133,23 @@ jobs:
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Build the image with specified version
         run: |
-          export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
-
-          TOKEN=$( curl -sSLd "username=${{ secrets.DOCKER_USERNAME }}&password=${{ secrets.DOCKER_PASSWORD }}" https://hub.docker.com/v2/users/login | jq -r ".token" )
-
-          if ! curl --fail --silent --header "Authorization: JWT $TOKEN" "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
-            IFS="." read -r -a semver <<< "$VERSION"
-            export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
-            for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
-              export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
-            done
+          # Always tag with the SHA of commit
+          export DOCKER_TAGS="--tag ${DOCKER_REPO}:${GIT_SHA::8}"
+          # If building on the 'master' branch publish 'latest' tag
+          if [[ "$GIT_REF" == 'refs/heads/master' && "$GIT_EVENT" == 'push' ]]; then
+            export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:latest"
+            # If tag does not exist, create semantic version for it (only from master)
+            if ! curl --fail --silent "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
+              IFS="." read -r -a semver <<< "$VERSION"
+              export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
+              for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
+                export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
+              done
+            fi
           fi
-
+          # Build/tag/push images
           eval docker buildx build --rm --pull --push \
-            --build-arg VERSION="$GIT_TAG" \
+            --build-arg VERSION="$GIT_SHA::8" \
             --build-arg VCS_URL="$(git config --get remote.origin.url)" \
             --build-arg VCS_REF="$(git rev-parse --short HEAD)" \
             --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \

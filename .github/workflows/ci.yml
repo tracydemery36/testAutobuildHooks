@@ -13,7 +13,7 @@ jobs:
           - repo: vladgh/testautobuildhooks
             path: testpath
             platform: linux/amd64
-            version: '1.5.11'
+            version: '1.5.12'
           # - repo: vladgh/apache
           #   path: apache
           #   platform: linux/386,linux/amd64
@@ -138,14 +138,14 @@ jobs:
           # If building on the 'master' branch publish 'latest' tag
           if [[ "$GIT_REF" == 'refs/heads/master' && "$GIT_EVENT" == 'push' ]]; then
             export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:latest"
-          fi
-          # If tag does not exist, create semantic version for it
-          if ! curl --fail --silent "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
-            IFS="." read -r -a semver <<< "$VERSION"
-            export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
-            for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
-              export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
-            done
+            # If tag does not exist, create semantic version for it (only from master)
+            if ! curl --fail --silent "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
+              IFS="." read -r -a semver <<< "$VERSION"
+              export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
+              for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
+                export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
+              done
+            fi
           fi
           # Build/tag/push images
           eval docker buildx build --rm --pull --push \

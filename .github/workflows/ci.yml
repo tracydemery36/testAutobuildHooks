@@ -112,7 +112,6 @@ jobs:
         with:
           buildx-version: latest
           qemu-version: latest
-
       # - name: Build the image with git tag version
       #   run: |
       #     export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"

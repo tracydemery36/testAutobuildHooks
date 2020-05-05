@@ -96,7 +96,7 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Set VARs
         run: |
-          echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
+          echo ::set-env name=GIT_SHA::"$(github.sha)"
           echo ::set-env name=GIT_REF::"${{ github.ref }}"
           echo ::set-env name=GIT_EVENT::"${{ github.event }}"
           echo ::set-env name=VERSION::"${{ matrix.image.version }}"
@@ -133,9 +133,8 @@ jobs:
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Build the image with specified version
         run: |
-          echo "${{ github.sha }}"
           # Always tag with the SHA of commit
-          export DOCKER_TAGS="--tag ${DOCKER_REPO}:${GIT_TAG}"
+          export DOCKER_TAGS="--tag ${DOCKER_REPO}:${GIT_SHA::8}"
           # If building on the 'master' branch publish 'latest' tag
           if [[ "$GIT_REF" == 'refs/heads/master' && "$GIT_EVENT" == 'push' ]]; then
             export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:latest"
@@ -150,7 +149,7 @@ jobs:
           fi
           # Build/tag/push images
           eval docker buildx build --rm --pull --push \
-            --build-arg VERSION="$GIT_TAG" \
+            --build-arg VERSION="$GIT_SHA::8" \
             --build-arg VCS_URL="$(git config --get remote.origin.url)" \
             --build-arg VCS_REF="$(git rev-parse --short HEAD)" \
             --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \

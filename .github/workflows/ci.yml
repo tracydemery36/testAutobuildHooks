@@ -97,6 +97,8 @@ jobs:
       - name: Set VARs
         run: |
           echo ::set-env name=GIT_TAG::"$(git describe --always --tags)"
+          echo ::set-env name=GIT_REF::"${{ github.ref }}"
+          echo ::set-env name=GIT_EVENT::"${{ github.event }}"
           echo ::set-env name=VERSION::"${{ matrix.image.version }}"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
           echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
@@ -131,18 +133,22 @@ jobs:
       #       "${DOCKER_TAGS}" "${DOCKER_BUILD_PATH}"
       - name: Build the image with specified version
         run: |
-          export DOCKER_TAGS="--tag ${DOCKER_REPO}:latest --tag ${DOCKER_REPO}:${GIT_TAG}"
-
-          TOKEN=$( curl -sSLd "username=${{ secrets.DOCKER_USERNAME }}&password=${{ secrets.DOCKER_PASSWORD }}" https://hub.docker.com/v2/users/login | jq -r ".token" )
-
-          if ! curl --fail --silent --header "Authorization: JWT $TOKEN" "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
+          echo "${{ github.sha }}"
+          # Always tag with the SHA of commit
+          export DOCKER_TAGS="--tag ${DOCKER_REPO}:${GIT_TAG}"
+          # If building on the 'master' branch publish 'latest' tag
+          if [[ "$GIT_REF" == 'refs/heads/master' && "$GIT_EVENT" == 'push' ]]; then
+            export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:latest"
+          fi
+          # If tag does not exist, create semantic version for it
+          if ! curl --fail --silent "https://hub.docker.com/v2/repositories/${DOCKER_REPO}/tags/${VERSION}/" >/dev/null; then
             IFS="." read -r -a semver <<< "$VERSION"
             export major="${semver[0]}" minor="${semver[1]}" patch="${semver[2]}"
             for version in "${major}.${minor}.${patch}" "${major}.${minor}" "${major}"; do
               export DOCKER_TAGS="${DOCKER_TAGS} --tag ${DOCKER_REPO}:${version}"
             done
           fi
-
+          # Build/tag/push images
           eval docker buildx build --rm --pull --push \
             --build-arg VERSION="$GIT_TAG" \
             --build-arg VCS_URL="$(git config --get remote.origin.url)" \

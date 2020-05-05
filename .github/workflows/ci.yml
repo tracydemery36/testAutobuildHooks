@@ -98,7 +98,7 @@ jobs:
         run: |
           echo ::set-env name=GIT_SHA::"${{ github.sha }}"
           echo ::set-env name=GIT_REF::"${{ github.ref }}"
-          echo ::set-env name=GIT_EVENT::"${{ github.event }}"
+          echo ::set-env name=GIT_EVENT::"${{ github.event_name }}"
           echo ::set-env name=VERSION::"${{ matrix.image.version }}"
           echo ::set-env name=DOCKER_REPO::"${{ matrix.image.repo }}"
           echo ::set-env name=DOCKER_PLATFORM::"${{ matrix.image.platform }}"
